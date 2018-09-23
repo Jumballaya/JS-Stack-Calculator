@@ -58,7 +58,7 @@ test('Stack can accumulate commands until an operator is added', t => {
 
 test('Stack pop returns latest item from the stack', t => {
   const program = [1, 2, 3];
-  const s = new Stack(program);
+  const s = new Stack([1, 2, 3]);
   t.is(s.pop(), program[program.length - 1]);
 });
 

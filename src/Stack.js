@@ -15,39 +15,48 @@ const doMath = (l, r, o) => {
   }
 };
 
-function Stack(program = []) {
-  const items = [];
+class Stack {
+  constructor(program = []) {
+    this.items = [];
+    this.push(program);
+  }
 
-  const p = i => {
-    items.push(i);
-    if (typeof i === 'string') items.push(this.evaluate());
-  };
-  this.push = i => {
+  pop() {
+    return this.items.pop();
+  }
+  show() {
+    return this.items;
+  }
+  clear() {
+    return this.items.pop() ? this.clear() : null;
+  }
+
+  pushItem(i) {
     if (!i) return null;
-    if (i instanceof Array) {
-      if (i.length) {
-        p(i[0]);
-        this.push(i.slice(1));
-      }
-    } else {
-      p(i);
+    this.items.push(i);
+    if (typeof i === 'string') this.items.push(this.evaluate());
+    return this.items;
+  }
+
+  push(item) {
+    if (!item) return this.items;
+    if (Array.isArray(item) && !item.length) return this.items;
+
+    if (Array.isArray(item)) {
+      this.pushItem(item.shift());
+      return this.push(item);
     }
-  };
+    return this.pushItem(item);
+  }
 
-  this.pop = () => items.pop();
-  this.show = () => items;
-  this.clear = () => (items.pop() ? this.clear() : null);
-
-  this.evaluate = () => {
+  evaluate() {
     const operator = this.pop();
-    let l = this.pop();
-    while (items.length) {
-      l = doMath(l, this.pop(), operator);
+    let left = this.pop();
+    while (this.items.length) {
+      left = doMath(left, this.pop(), operator);
     }
-    return l;
-  };
-
-  this.push(program);
+    return left;
+  }
 }
 
 module.exports = Stack;
