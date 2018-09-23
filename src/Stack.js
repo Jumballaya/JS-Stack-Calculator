@@ -18,7 +18,7 @@ const doMath = (l, r, o) => {
 class Stack {
   constructor(program = []) {
     this.items = [];
-    this.push(program);
+    this.load(program);
   }
 
   pop() {
@@ -31,22 +31,24 @@ class Stack {
     return this.items.pop() ? this.clear() : null;
   }
 
-  pushItem(i) {
-    if (!i) return null;
-    this.items.push(i);
-    if (typeof i === 'string') this.items.push(this.evaluate());
-    return this.items;
+  push(stmt) {
+    if (!stmt) return 0;
+    this.items.push(stmt);
+    if (typeof stmt === 'string') this.items.push(this.evaluate());
+    return 1;
   }
 
-  push(item) {
-    if (!item) return this.items;
-    if (Array.isArray(item) && !item.length) return this.items;
+  load(program, count = 0) {
+    if (!program) return count;
+    if (Array.isArray(program) && !program.length) return count;
 
-    if (Array.isArray(item)) {
-      this.pushItem(item.shift());
-      return this.push(item);
+    if (Array.isArray(program)) {
+      this.push(program.shift());
+      return this.load(program, count + 1);
     }
-    return this.pushItem(item);
+
+    this.push(program);
+    return count + 1;
   }
 
   evaluate() {

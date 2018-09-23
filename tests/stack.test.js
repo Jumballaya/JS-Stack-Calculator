@@ -68,6 +68,27 @@ test('Stack push adds a new item to the end of the list', t => {
   t.is(s.show()[0], 1);
 });
 
+test('Stack push returns 1 if the push was successful', t => {
+  const s = new Stack();
+  t.is(s.push(1), 1);
+});
+
+test('Stack load returns the amount of statements pushed to the stack', t => {
+  const tests = [
+    { input: [], expected: 0 },
+    { input: [1], expected: 1 },
+    { input: [1, 2, 3], expected: 3 },
+    { input: [1, 2, '+', 1, 2, 3], expected: 6 },
+    { input: [1, 2, 3, 4, 6, 123, '-'], expected: 7 },
+    { input: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], expected: 10 },
+  ];
+
+  tests.forEach(tt => {
+    const s = new Stack();
+    t.is(s.load(tt.input), tt.expected);
+  });
+});
+
 test('Stack clear removes items from the stack', t => {
   const program = [1, 2, 3];
   const s = new Stack(program);
